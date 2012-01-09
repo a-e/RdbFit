@@ -31,6 +31,7 @@ RdbFit supports the following table types:
 * [Decision Table](http://fitnesse.org/FitNesse.UserGuide.SliM.DecisionTable)
 
 There are two ways to initialize a table.  Note the lower-case 'f's.
+
 * | [tabletype:]Rdbfit | [database address][:port] | username | password | database | query [| database_type] |
   The database type is optional if a recognized port is provided.
 * | [tabletype:]Rdbfit | database:connection:string | query |
