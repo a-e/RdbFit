@@ -33,6 +33,7 @@ module RdbFit
       end
         
       @sth = @connection.execute(querystr)
+      @querystr = querystr
       # These vars are for method_missing.
       @is_decision_table = false
       # The vertical position of each column header we're testing.
@@ -53,6 +54,26 @@ module RdbFit
       end
       @sth.finish
       return retval
+    end
+
+    # Script method to wait for data.
+    # @param [String] result
+    #   The expected query result, formatted as ;-separated lines, with ','-separated values.
+    # @param [String, Integer] minutes
+    #   Time to wait in minutes
+    def query_returns_within_minutes(result, minutes=5)
+      minutes = Integer(minutes)
+      for i in 0..minutes
+        rows = []
+        @sth.fetch_array { |arr| rows.push(arr.join(',')) }
+        rows = rows.join(';')
+        return true if rows == result
+        unless i == minutes
+          sleep 60 
+          @sth = @connection.execute(@querystr)
+        end
+      end
+      return false
     end
 
     # DecisionTable as QueryTable methods
